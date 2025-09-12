@@ -43,7 +43,7 @@ void PmergeMe::sortVector(std::vector<int>& v)
 {
     if (v.size() <= 1) 
         return;
-    if (v.size() == 2) 
+    if (v.size() <= 2) 
     {
         if (v[0] > v[1]) 
             std::swap(v[0], v[1]);
@@ -63,7 +63,6 @@ void PmergeMe::sortVector(std::vector<int>& v)
         int a = v[i], b = v[i+1];
         pairs.push_back(std::make_pair(a > b ? a : b, a > b ? b : a));
     }
-    std::sort(pairs.begin(), pairs.end());
     std::vector<int> majors, minors;
     for (size_t i = 0; i < pairs.size(); ++i) 
     {
@@ -119,14 +118,13 @@ void PmergeMe::sortDeque(std::deque<int>& d) {
         d.pop_back();
         hasStraggler = true;
     }
-    std::vector<std::pair<int, int> > pairs;
+    std::deque<std::pair<int, int> > pairs;
     for (size_t i = 0; i < d.size(); i += 2) {
         int a = d[i], b = d[i+1];
         pairs.push_back(std::make_pair(a > b ? a : b, a > b ? b : a));
     }
-    std::sort(pairs.begin(), pairs.end());
     std::deque<int> majors;
-    std::vector<int> minors;
+    std::deque<int> minors;
     for (size_t i = 0; i < pairs.size(); ++i) {
         majors.push_back(pairs[i].first);
         minors.push_back(pairs[i].second);
