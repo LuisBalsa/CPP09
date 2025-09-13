@@ -31,20 +31,15 @@ static std::vector<int> generateJacobsthal(int n)
 // Generate insertion order based on Jacobsthal sequence
 static std::vector<int> generateInsertionOrder(int n) 
 {
-    std::vector<int> empty;
-    if (n <= 1) 
-        return empty;
-    std::vector<int> jacobsthal = generateJacobsthal(n);
     std::vector<int> order;
-    order.push_back(1);
-    for (size_t i = 2; i < jacobsthal.size() && jacobsthal[i-1] < n; ++i) 
-    {
-        int groupStart = jacobsthal[i-1] + 1;
-        int groupEnd = std::min(jacobsthal[i], n);
-        for (int pos = groupEnd; pos >= groupStart; --pos) 
-        {
-            order.push_back(pos);
-        }
+    if (n <= 0)
+        return order;
+    std::vector<int> jacobsthal = generateJacobsthal(n);
+    int numberToPush = jacobsthal.back();
+    jacobsthal.pop_back();
+    while(numberToPush > jacobsthal.back()) {
+        order.push_back(numberToPush);
+        numberToPush--;
     }
     return order;
 }
@@ -56,8 +51,10 @@ void PmergeMe::sortVector(std::vector<int>& v)
         return;
     if (v.size() <= 2) 
     {
-        if (v[0] > v[1]) 
+        if (v[0] > v[1]) {
             std::swap(v[0], v[1]);
+        }
+        ++PmergeMe::vectorComparisons;
         return;
     }
     int straggler = -1;
@@ -110,7 +107,10 @@ void PmergeMe::sortVector(std::vector<int>& v)
 void PmergeMe::sortDeque(std::deque<int>& d) {
     if (d.size() <= 1) return;
     if (d.size() == 2) {
-        if (d[0] > d[1]) std::swap(d[0], d[1]);
+        if (d[0] > d[1]) {
+            std::swap(d[0], d[1]);
+        }
+        ++PmergeMe::dequeComparisons;
         return;
     }
     int straggler = -1;
