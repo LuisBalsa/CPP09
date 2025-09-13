@@ -43,5 +43,8 @@ int main(int argc, char** argv) {
     double elapsedDeq = 1.0 * (endDeq - startDeq) / CLOCKS_PER_SEC * 1e6;
     std::cout << "Time to process a range of " << v.size() << " elements with std::vector : " << elapsedVec << " us" << std::endl;
     std::cout << "Time to process a range of " << d.size() << " elements with std::deque  : " << elapsedDeq << " us" << std::endl;
+#ifdef PMERGEME_DEBUG
+    PmergeMe::printComparisonCounts();
+#endif
     return 0;
 }
