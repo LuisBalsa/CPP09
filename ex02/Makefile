@@ -1,7 +1,7 @@
 NAME = PmergeMe
 
 SRC = main.cpp PmergeMe.cpp
-DEPS = PmergeMe.hpp
+DEPS = PmergeMe.hpp PmergeMe.tpp
 
 VPATH = sources includes
 OBJ_PATH = obj/

@@ -62,56 +62,46 @@ void PmergeMe::sortVector(std::vector<int>& v)
     }
     int straggler = -1;
     bool hasStraggler = false;
-    if (v.size() % 2 != 0) 
-    {
+    if (v.size() % 2 != 0) {
         straggler = v.back();
         v.pop_back();
         hasStraggler = true;
     }
     std::vector<std::pair<int, int> > pairs;
-    for (size_t i = 0; i < v.size(); i += 2) 
-    {
+    for (size_t i = 0; i < v.size(); i += 2) {
         int a = v[i], b = v[i+1];
         pairs.push_back(std::make_pair(a > b ? a : b, a > b ? b : a));
         ++PmergeMe::vectorComparisons;
     }
     std::vector<int> majors, minors;
-    for (size_t i = 0; i < pairs.size(); ++i) 
-    {
+    for (size_t i = 0; i < pairs.size(); ++i) {
         majors.push_back(pairs[i].first);
         minors.push_back(pairs[i].second);
     }
     sortVector(majors);
+    if (hasStraggler) {
+        minors.push_back(straggler);
+    }
     std::vector<int> mainChain;
     for (size_t i = 0; i < majors.size(); ++i)
         mainChain.push_back(majors[i]);
-    if (!minors.empty()) 
-    {
+    if (!minors.empty()) {
         std::vector<int> jacobOrder = generateInsertionOrder((int)minors.size());
         std::vector<bool> inserted(minors.size(), false);
-        for (size_t k = 0; k < jacobOrder.size(); ++k) 
-        {
+        for (size_t k = 0; k < jacobOrder.size(); ++k) {
             int idx = jacobOrder[k];
-            if (idx < (int)minors.size() && !inserted[idx]) 
-            {
+            if (idx < (int)minors.size() && !inserted[idx]) {
                 std::vector<int>::iterator pos = my_lower_bound(mainChain.begin(), mainChain.end(), minors[idx], vectorComparisons);
                 mainChain.insert(pos, minors[idx]);
                 inserted[idx] = true;
             }
         }
-        for (size_t i = 0; i < minors.size(); ++i) 
-        {
-            if (!inserted[i]) 
-            {
+        for (int i = minors.size() - 1; i >= 0; --i) {
+            if (!inserted[i]) {
                 std::vector<int>::iterator pos = my_lower_bound(mainChain.begin(), mainChain.end(), minors[i], vectorComparisons);
                 mainChain.insert(pos, minors[i]);
             }
         }
-    }
-    if (hasStraggler) 
-    {
-        std::vector<int>::iterator pos = my_lower_bound(mainChain.begin(), mainChain.end(), straggler, vectorComparisons);
-        mainChain.insert(pos, straggler);
     }
     v = mainChain;
 }
@@ -142,6 +132,9 @@ void PmergeMe::sortDeque(std::deque<int>& d) {
         majors.push_back(pairs[i].first);
         minors.push_back(pairs[i].second);
     }
+    if (hasStraggler) {
+        minors.push_back(straggler);
+    }
     sortDeque(majors);
     std::deque<int> mainChain;
     for (size_t i = 0; i < majors.size(); ++i)
@@ -157,16 +150,12 @@ void PmergeMe::sortDeque(std::deque<int>& d) {
                 inserted[idx] = true;
             }
         }
-        for (size_t i = 0; i < minors.size(); ++i) {
+        for (int i = minors.size() - 1; i >= 0; --i) {
             if (!inserted[i]) {
                 std::deque<int>::iterator pos = my_lower_bound(mainChain.begin(), mainChain.end(), minors[i], dequeComparisons);
                 mainChain.insert(pos, minors[i]);
             }
         }
-    }
-    if (hasStraggler) {
-        std::deque<int>::iterator pos = my_lower_bound(mainChain.begin(), mainChain.end(), straggler, dequeComparisons);
-        mainChain.insert(pos, straggler);
     }
     d = mainChain;
 }
